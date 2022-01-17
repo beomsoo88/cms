@@ -1,0 +1,29 @@
+
+<form name="messageForm" id="messageForm" method="post" th:action="${returnUrl}">
+	<input type="hidden" th:name="${hiddenName1 }" th:value="${hiddenValue1 }" />
+	<input type="hidden" th:name="${hiddenName2 }" th:value="${hiddenValue2 }" />
+	<input type="hidden" th:name="${hiddenName3 }" th:value="${hiddenValue3 }" />
+	<input type="hidden" th:name="${hiddenName4 }" th:value="${hiddenValue4 }" />
+	<input type="hidden" th:name="${hiddenName5 }" th:value="${hiddenValue5 }" />
+</form>
+<script>
+	var message = "[[${message}]]";
+	var returnType = "[[${returnType}]]";
+	var returnUrl = "[[${returnUrl}]]";
+	
+	// 메세지 처리
+	if(message != null && message != ""){
+		alert(message);		
+	}
+	
+	// return 처리
+	if(returnType == ":submit"){
+		document.messageForm.submit();
+	}else if(returnType == ":back"){
+		history.back();
+	}else if(returnType == ":location"){
+		location.href = returnUrl;
+	}else if(returnType == ":close"){
+		window.close();
+	}
+</script>

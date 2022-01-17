@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+    driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://localhost:3306/cms?characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: root!@#$
+
+    sql-script-encoding: UTF-8
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  
+  thymeleaf:
+    cache: false
+  mvc:
+    static-path-pattern: /static/**
+  web:    resources:
+      static-locations: classpath:/static/
+      add-mappings: true
+
+server:
+  port : 8088
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+    session:
+      timeout: 40000h
+  error:
+    path: '/error'
+    include-exception: true
+    include-stacktrace: always
+    whitelabel.enabled: true 
+     
+logging:
+  level:
+    web: warn
+    root: warn
+    com.msit.cms: debug
+
+banner:
+  location: banner.txt

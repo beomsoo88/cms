@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>관리자 로그인 | CMS</title>
+
+	<link rel="stylesheet" href="/static/admin/css/codemirror.css">
+	<link rel="stylesheet" href="/static/admin/css/common.css">
+	<link rel="stylesheet" href="/static/admin/css/layout.css">
+	<link rel="stylesheet" href="/static/admin/css/datepicker.css">
+	<link rel="stylesheet" href="/static/admin/css/login.css">
+	<script src="/static/admin/js/jquery-3.4.1.min.js"></script>
+	<script src="/static/admin/js/jquery-ui-datepicker.min.js"></script>
+	<script src="/static/admin/js/codemirror.js"></script>
+    <script src="/static/admin/js/xml-fold.js"></script>
+    <script src="/static/admin/js/matchtags.js"></script>
+    <script src="/static/admin/js/active-line.js"></script>
+    <script src="/static/admin/js/mode-xml.js"></script>
+	<script src="/static/admin/js/highcharts.js"></script>
+	<script src="/static/admin/js/layout.js"></script>
+	<script src="/static/admin/js/sub.js"></script>
+</head>
+<body>
+
+	<div class="login-wrapper">
+	    <div class="login-wrap">
+        	<h1><img src="/static/admin/img/admin_logo.png" style="width: 360px;" alt="로고"></h1>
+	        <div class="login-box">
+		        <form action="#" id="entryForm" name="entryForm" method="post">
+	                <div class="login-inner">
+	                    <div class="form id">
+	                        <img src="/static/admin/img/login_id.png" alt="아이디 아이콘">
+		                    <input type="text" id="id" class="tit" placeholder="아이디" onkeypress="if(event.keyCode == 13){fn_login();}" maxlength="20">
+	                    </div>
+	                    <div class="form pw">
+	                        <img src="/static/admin/img/login_pw.png" alt="비밀번호 아이콘">
+		                    <input type="password" id="pw" class="tit" placeholder="비밀번호" onkeypress="if(event.keyCode == 13){fn_login();}" maxlength="20">
+	                    </div>
+		                <button type="button" class="btn" onclick="javascript:fn_login();">로그인</button>
+	                </div>
+	            </form>
+	        </div>
+	        <p class="copyright">Copyright 2022 <strong><a class="colgray" href="#lnk" target="_blank" title="새창 열림">MSIT</a></strong>. All rights reserved.</p>
+	    </div>
+	</div>
+	<form action="#" id="loginForm" name="loginForm" method="post">
+		<input type="hidden" name="adminId" id="adminId" value="">
+		<input type="hidden" name="adminPw" id="adminPw" value="">
+	</form>
+	
+	<script>
+		function fn_login() {
+			if ($("#id").val() == "") {
+				alert("아이디를 입력하세요.");
+				$("#id").focus();
+				return false;
+			} else {
+				$("#adminId").val($("#id").val());
+			}
+			
+			if ($("#pw").val() == "") {
+				alert("비밀번호를 입력하세요.");
+				$("#pw").focus();
+				return false;
+			} else {
+				$("#adminPw").val($("#pw").val());
+			}
+			document.loginForm.action = "/admin/login-action";
+			document.loginForm.submit();
+		}
+	</script>
+</body>
+</html>

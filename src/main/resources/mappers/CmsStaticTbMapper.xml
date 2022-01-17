@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.msit.cms.common.service.impl.CmsStaticTbMapper">
+
+	<select id="selectCmsStaticTbList" parameterType="com.msit.cms.common.service.CmsStaticTbDTO" resultType="com.msit.cms.common.service.CmsStaticTbDTO">
+		select 
+			
+			code
+			, static_val1
+			, static_val2
+			, static_val3
+			, cd_desc
+		from cms_static_tb
+		<where>
+			
+			<if test="code                      !=null and code                      !=''"><![CDATA[ and code = #{code} ]]></if>
+			<if test="staticVal1                !=null and staticVal1                !=''"><![CDATA[ and static_val1 = #{staticVal1} ]]></if>
+			<if test="staticVal2                !=null and staticVal2                !=''"><![CDATA[ and static_val2 = #{staticVal2} ]]></if>
+			<if test="staticVal3                !=null and staticVal3                !=''"><![CDATA[ and static_val3 = #{staticVal3} ]]></if>
+			<if test="cdDesc                    !=null and cdDesc                    !=''"><![CDATA[ and cd_desc = #{cdDesc} ]]></if>
+		</where>
+		order by code desc
+		<if test="row != 0"><![CDATA[ limit #{offset}, #{row} ]]></if>
+	</select>
+
+	<!-- paging 처리용 -->
+	<select id="selectCmsStaticTbCount" parameterType="com.msit.cms.common.service.CmsStaticTbDTO" resultType="int">
+		select count(1) from cms_static_tb
+		<where>
+			
+			<if test="code                      !=null and code                      !=''"><![CDATA[ and code = #{code} ]]></if>
+			<if test="staticVal1                !=null and staticVal1                !=''"><![CDATA[ and static_val1 = #{staticVal1} ]]></if>
+			<if test="staticVal2                !=null and staticVal2                !=''"><![CDATA[ and static_val2 = #{staticVal2} ]]></if>
+			<if test="staticVal3                !=null and staticVal3                !=''"><![CDATA[ and static_val3 = #{staticVal3} ]]></if>
+			<if test="cdDesc                    !=null and cdDesc                    !=''"><![CDATA[ and cd_desc = #{cdDesc} ]]></if>
+		</where>
+	</select>
+
+	<!-- INSERT cms_static_tb -->
+	<insert id="insertCmsStaticTb" parameterType="com.msit.cms.common.service.CmsStaticTbDTO">
+		insert into cms_static_tb (
+			<trim prefixOverrides=",">
+			
+			<if test="code                      !=null and code                      !=''"> , code </if>
+			<if test="staticVal1                !=null and staticVal1                !=''"> , static_val1 </if>
+			<if test="staticVal2                !=null and staticVal2                !=''"> , static_val2 </if>
+			<if test="staticVal3                !=null and staticVal3                !=''"> , static_val3 </if>
+			<if test="cdDesc                    !=null and cdDesc                    !=''"> , cd_desc </if>
+			</trim>
+		) values(
+			<trim prefixOverrides=",">
+			
+			<if test="code                      !=null and code                      !=''"> , #{code} </if>
+			<if test="staticVal1                !=null and staticVal1                !=''"> , #{staticVal1} </if>
+			<if test="staticVal2                !=null and staticVal2                !=''"> , #{staticVal2} </if>
+			<if test="staticVal3                !=null and staticVal3                !=''"> , #{staticVal3} </if>
+			<if test="cdDesc                    !=null and cdDesc                    !=''"> , #{cdDesc} </if>
+			</trim>
+		)
+	</insert>
+
+	<!-- UPDATE cms_static_tb -->
+	<update id="updateCmsStaticTb" parameterType="com.msit.cms.common.service.CmsStaticTbDTO">
+		update cms_static_tb
+			<trim prefix="set" prefixOverrides=",">
+				
+			<if test="staticVal1                !=null and staticVal1                !=''"> , static_val1 = #{staticVal1} </if>
+			<if test="staticVal2                !=null and staticVal2                !=''"> , static_val2 = #{staticVal2} </if>
+			<if test="staticVal3                !=null and staticVal3                !=''"> , static_val3 = #{staticVal3} </if>
+			<if test="cdDesc                    !=null and cdDesc                    !=''"> , cd_desc = #{cdDesc} </if>
+			</trim>
+		where code = #{code}
+	</update>
+
+	<!-- DELETE cms_static_tb -->
+	<delete id="deleteCmsStaticTb" parameterType="String">
+		delete from cms_static_tb where code = #{code}
+	</delete>
+
+</mapper>

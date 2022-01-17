@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Bootstrap Example</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<style>
+		.row-btn-space{
+			width : 100%;
+			height : 40px;
+		}
+		.thead-center > thead > tr > th {
+			text-align : center;
+		} 
+		.tbody-center > tbody > tr > td {
+			text-align : center;
+		}
+		.flat {
+			border-radius:0px !important;
+		}
+		.select_table {
+			height: 78vh;
+			border: 1px solid #d2d2d2;
+			border-right : 0px;
+			border-left : 0px;
+			overflow-y: scroll;
+			padding-top : 10px;
+		}
+		th {
+			background : #777777 !important;
+			color : white;
+		}
+		#selectSchemeName{
+			font-weight : bold
+		}
+		.font-ms-color{
+			color : #eb6100 !important
+		}
+	</style>
+	<script>
+		function common_ajax(url, dataset){
+			$.ajax({
+				url:url, //request 보낼 서버의 경로
+				type : "post", // 메소드(get, post, put 등)
+				data : JSON.stringify(dataset), //보낼 데이터
+				dataType : "json", 
+				contentType: 'application/json',
+				async : false,
+				beforeSend : function(xmlHttpRequest) { },
+				success: function(data) { },
+				error: function(err) { //서버로부터 응답이 정상적으로 처리되지 못햇을 때 실행
+					return false;
+				}
+			});
+		}
+	
+		var selectSchema = "";
+		var selectTable = "";
+		function showTables(schemaName){
+			if(schemaName == null){
+				schemaName = $("#schemaName").val()
+			}
+			$.post("generator/showTables", {schemaName : schemaName}, function(data){
+				console.log(data);
+				var html = "";
+				for(var i=0;i<data.list.length;i++) {
+					html += gen_tables_tr(data.list[i], schemaName);
+				}
+				$("#selectSchemeName").text(schemaName.toUpperCase());
+				selectSchema = schemaName;
+				$("#tables").html(html);
+			})
+		}
+
+		function showSchemas(){
+			$.post("generator/showSchemas", {}, function(data){
+				console.log(data);
+				var html = "";
+				for(var i=0;i<data.list.length;i++) {
+					html += gen_schemas_tr(data.list[i]);
+				}
+				$("#schmas").html(html);
+			})
+		}
+	
+		function genRequestMapper(tableName) {
+			var dataSet = {schemaName : selectSchema, tableName : tableName, folderPath : $("#folderPath").val()};
+			$.post("generator/MapperWithDTO", dataSet, function(data){});
+		}
+		
+		function genRequestDTO(tableName) {
+			var dataSet = {schemaName : selectSchema, tableName : tableName, folderPath : $("#folderPath").val()};
+			$.post("generator/Dto", dataSet, function(data){});
+		}
+		function genRequestService(tableName) {
+			var dataSet = {schemaName : selectSchema, tableName : tableName, folderPath : $("#folderPath").val()};
+			$.post("generator/Service", dataSet, function(data){});
+		}
+		
+		function genRequestDAO(tableName, dom) {
+			var implFl = "false";
+			if($(dom).parents("td").next().find("input").is(":checked")){ implFl = "true"; }
+			var dataSet = {implFl : implFl, schemaName : selectSchema, tableName : tableName, folderPath : $("#folderPath").val()};
+			$.post("generator/Dao", dataSet, function(data){});
+		}
+		
+		function gen_tables_tr(row, schemaName){
+			var tn = row.tablename;
+			//mysql
+			//eval("var tn = row.Tables_in_" + schemaName)
+			
+			var html = "";
+			html += "<tr>";
+			html += "<td><input type='checkbox' class='table_check' value='" + tn + "'></td>";
+			html += "<td>"+tn.toUpperCase()+"</td>";
+			html += "<td><button type='button' class='btn btn-success btn-sm flat' onclick='genRequestDTO(\""+tn+"\");'>DTO</button></td>";
+			html += "<td><button type='button' class='btn btn-primary btn-sm flat' onclick='genRequestMapper(\""+tn+"\");'>MAPPER</button></td>";
+			html += "<td><button type='button' class='btn btn-info    btn-sm flat' onclick='genRequestService(\""+tn+"\");'>SERVICE</button></td>";
+			html += "<td><button type='button' class='btn btn-warning btn-sm flat' onclick='genRequestDAO(\""+tn+"\", this);'>DAO</button></td>";
+			/* html += "<td>";
+			html += "<input type='checkbox' class='impl_check'>";
+			html += "</td>"; */
+			html += "</tr>";
+			return html;
+		}
+
+		function gen_schemas_tr(row){
+			var html = "";
+			html += "<tr>";
+			html += "<td><a href='javascript:void(0);' onclick='showTables(\""+row.Database+"\");'>"+row.Database.toUpperCase()+"</a></td>";
+			html += "</tr>";
+			return html;
+		}
+		
+		$(document).ready(function(){
+			//showSchemas();
+		})
+		
+		function checkImplAll(dom, className){
+			if(!$(dom).is(":checked")){
+				$("." + className).attr("checked", false);
+				$("." + className).prop('checked', false);
+				$("." + className).removeAttr( 'checked' );
+			} else {
+				$("." + className).attr("checked", true);
+				$("." + className).prop('checked', true);
+			}
+		}
+		
+		function createAll(){
+			var tableArray = new Array();
+			$(".table_check").each(function( index ) {
+				var innerDataSet = {};
+				if($(this).is(":checked")){
+					innerDataSet.tableName = $(this).val();
+					if($(this).parents("tr").children().last().find("input").is(":checked")){
+						innerDataSet.implFl = "true";
+					} else {
+						innerDataSet.implFl = "false";
+					}
+					innerDataSet.schemaName = selectSchema;
+					innerDataSet.folderPath = $("#folderPath").val();
+					tableArray.push(innerDataSet);
+				}
+			});
+			var dataSet = { tables : tableArray };
+			common_ajax("generator/All", dataSet);
+		}
+		
+	</script>
+</head>
+<body>
+	<div class="container text-center" style="height:100vh; padding-top: 30vh" id="ask_dev">
+		<h2 style="font-weight:bold;"><span class="font-ms-color">개발자</span> 이십니까?</h2>
+		<p style="margin-top : 60px">
+			<button type='button' class='btn btn-lg btn-primary flat' style="width: 10vw" onclick='$("#ask_dev").remove(); $("#generator").show()'>예</button>
+			<button type='button' class='btn btn-lg btn-danger flat'  style="width: 10vw" onclick='$("#ask_dev").remove(); $("#generator").remove()'>아니오</button>
+		</p>
+		
+		<h4 style="margin-top:40px; line-height: 32px;">잘못된 조작으로 심각한 오류가 발생할수 있으므로<br>교육된 개발자 외의 사용을 금합니다.</h4>
+	</div>
+	<div class="container" id="generator" style="display:none;">
+		<div class="row" style="margin-top : 30px;">
+			<div class="col-sm-3 text-right">
+				<h4>프로젝트 Workspace 경로 :</h4>
+			</div>
+			<div class="col-sm-7">
+				<input type="text" class="form-control flat" id="folderPath" value="C:\sts_4_workspace\ms_erp\ms_erp">
+			</div>
+		</div>
+		<div class="row" style="margin-bottom : 30px;">
+			<div class="col-sm-3 text-right">
+				<h4>스키마명 :</h4>
+			</div>
+			<div class="col-sm-7">
+				<input type="text" class="form-control flat" id="schemaName" value="cms">
+			</div>
+			<div class="col-sm-2">
+				<button type='button' class='btn btn-primary flat' onclick='showTables();'>찾기</button>
+			</div>
+		</div>
+		
+		<div class="row">
+			<!-- 
+			<div class="col-sm-3 select_table">
+				<div class="row row-btn-space"><div class="col-sm-12"></div></div>
+				<div class="row">
+				<div class="col-sm-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>SCHEMAS</th>
+						</tr>
+					</thead>
+					<tbody id="schmas">
+					</tbody>
+				</table>
+				</div>
+				</div>
+			</div>
+			 -->
+			<div class="col-sm-12">
+				<div class="row row-btn-space">
+					<div class="col-sm-6">
+						<button type='button' class='btn btn-danger flat' onclick='createAll();'>선택 생성</button>
+					</div>
+					<div class="col-sm-6 text-right">
+						<h4 id="selectSchemeName"></h4>
+					</div>
+				</div>
+
+				<div class="row">
+				<div class="col-sm-12">
+				<table class="table table-bordered thead-center tbody-center">
+					<thead>
+						<tr>
+							<th style="width : 6%"><input type='checkbox' onchange="checkImplAll(this, 'table_check');">&nbsp;&nbsp;ALL</th>
+							<th>TABLE NAME</th>
+							<th style="width : 10%">DTO 생성</th>
+							<th style="width : 10%">MAPPER 생성</th>
+							<th style="width : 10%">SERVICE 생성</th>
+							<th style="width : 10%">DAO 생성</th>
+							<!-- <th style="width : 10%"><input type='checkbox' onchange="checkImplAll(this, 'impl_check');" checked='checked'>&nbsp;&nbsp;IMPL포함</th> -->
+						</tr>
+					</thead>
+					<tbody id="tables">
+						<tr><td colspan='7'>스키마를 선택해주세요.</td></tr>
+					</tbody>
+				</table>
+				</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h5 class="text-right">Copyright 2020 Lee Kang Min</h5>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

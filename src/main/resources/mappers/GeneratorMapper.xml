@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.msit.cms.generator.GeneratorMapper">
+
+	<select id="showTables" parameterType="hashmap" resultType="hashmap">
+		show tables
+	</select>
+	
+	<select id="useTable" parameterType="hashmap" resultType="hashmap">
+		use ${schemaName}
+	</select>
+	
+	<select id="showSchemas" parameterType="hashmap" resultType="hashmap">
+		show schemas
+	</select>
+	
+	<select id="showTableDefinition" parameterType="hashmap" resultType="hashmap">
+		select
+			column_name as field,
+			data_type as type
+				from information_schema.columns
+		where table_name = #{tableName}
+		order by ordinal_position asc
+		<!-- dtd_identifier asc -->
+	</select>
+	
+
+</mapper>
