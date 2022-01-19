@@ -1,0 +1,12 @@
+package %(PackageName)%.%(PackageAdd)%;
+
+import lombok.Getter;
+import lombok.Setter;
+import %(CommonPackageName)%.service.CommonDTO;
+
+@Getter
+@Setter
+public class %(TableName)%DTO extends CommonDTO {
+	%(columnVariablesList)%
+	
+}

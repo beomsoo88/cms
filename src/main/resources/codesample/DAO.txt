@@ -1,0 +1,22 @@
+package %(PackageName)%.%(PackageAdd)%;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import %(PackageName)%.dto.%(TableName)%DTO;
+
+@Mapper
+public interface %(TableName)%Mapper {
+
+	List<%(TableName)%DTO> select%(TableName)%List(%(TableName)%DTO eDTO) throws Exception;
+
+	int select%(TableName)%Count(%(TableName)%DTO eDTO) throws Exception;
+
+	int insert%(TableName)%(%(TableName)%DTO eDTO) throws Exception;
+
+	int update%(TableName)%(%(TableName)%DTO eDTO) throws Exception;
+
+	int delete%(TableName)%(String keyId) throws Exception;
+
+}

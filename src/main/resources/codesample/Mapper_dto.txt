@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="%(DaoPackageName)%.%(TableName)%Mapper">
+
+	<select id="select%(TableName)%List" parameterType="%(PackageName)%.%(TableName)%DTO" resultType="%(PackageName)%.%(TableName)%DTO">
+		select 
+			%(COLUMN_LIST)%
+		from %(TABLE_NAME)%
+		<where>
+			%(MYBATIS_WHERE_COLUMNS)%
+		</where>
+		order by %(KEY_NAME)% desc
+		<if test="row != 0"><![CDATA[ limit #{offset}, #{row} ]]></if>
+	</select>
+
+	<!-- paging 처리용 -->
+	<select id="select%(TableName)%Count" parameterType="%(PackageName)%.%(TableName)%DTO" resultType="int">
+		select count(1) from %(TABLE_NAME)%
+		<where>
+			%(MYBATIS_WHERE_COLUMNS)%
+		</where>
+	</select>
+
+	<!-- INSERT %(TABLE_NAME)% -->
+	<insert id="insert%(TableName)%" parameterType="%(PackageName)%.%(TableName)%DTO">
+		insert into %(TABLE_NAME)% (
+			<trim prefixOverrides=",">
+			%(MYBATIS_INSERT_COLUMNS_COLUMN)%
+			</trim>
+		) values(
+			<trim prefixOverrides=",">
+			%(MYBATIS_INSERT_COLUMNS_VALUE)%
+			</trim>
+		)
+	</insert>
+
+	<!-- UPDATE %(TABLE_NAME)% -->
+	<update id="update%(TableName)%" parameterType="%(PackageName)%.%(TableName)%DTO">
+		update %(TABLE_NAME)%
+			<trim prefix="set" prefixOverrides=",">
+				%(MYBATIS_UPDATE_COLUMNS)%
+			</trim>
+		where %(KEY_NAME)% = #{%(keyName)%}
+	</update>
+
+	<!-- DELETE %(TABLE_NAME)% -->
+	<delete id="delete%(TableName)%" parameterType="String">
+		delete from %(TABLE_NAME)% where %(KEY_NAME)% = #{%(keyName)%}
+	</delete>
+
+</mapper>

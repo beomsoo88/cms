@@ -1,0 +1,19 @@
+package %(PackageName)%.%(PackageAdd)%;
+
+import java.util.List;
+
+import %(PackageName)%.dto.%(TableName)%DTO;
+
+public interface %(TableName)%Service {
+
+	public List<%(TableName)%DTO> get%(TableName)%List(%(TableName)%DTO eDTO) throws Exception;
+
+	public int get%(TableName)%Count(%(TableName)%DTO eDTO) throws Exception;
+
+	public int add%(TableName)%(%(TableName)%DTO eDTO) throws Exception;
+
+	public int chg%(TableName)%(%(TableName)%DTO eDTO) throws Exception;
+
+	public int del%(TableName)%(String keyId) throws Exception;
+
+}
