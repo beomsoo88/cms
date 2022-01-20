@@ -2,8 +2,6 @@ package %(PackageName)%.%(PackageAdd)%;
 
 import java.util.List;
 
-import %(PackageName)%.dto.%(TableName)%DTO;
-
 public interface %(TableName)%Service {
 
 	public List<%(TableName)%DTO> get%(TableName)%List(%(TableName)%DTO eDTO) throws Exception;

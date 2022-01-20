@@ -121,10 +121,10 @@
 			html += "<td><input type='checkbox' class='table_check' value='" + tn + "'></td>";
 			html += "<td>"+tn.toUpperCase()+"</td>";
 			html += "<td><button type='button' class='btn btn-success btn-sm flat' onclick='genRequestDTO(\""+tn+"\");'>DTO</button></td>";
-			html += "<td><button type='button' class='btn btn-primary btn-sm flat' onclick='genRequestMapper(\""+tn+"\");'>MAPPER</button></td>";
 			html += "<td><button type='button' class='btn btn-info    btn-sm flat' onclick='genRequestService(\""+tn+"\");'>SERVICE</button></td>";
 			html += "<td><button type='button' class='btn btn-info    btn-sm flat' onclick='genRequestServiceImpl(\""+tn+"\");'>SERVICE IMPL</button></td>";
 			html += "<td><button type='button' class='btn btn-warning btn-sm flat' onclick='genRequestDAO(\""+tn+"\", this);'>DAO</button></td>";
+			html += "<td><button type='button' class='btn btn-primary btn-sm flat' onclick='genRequestMapper(\""+tn+"\");'>MAPPER</button></td>";
 			/* html += "<td>";
 			html += "<input type='checkbox' class='impl_check'>";
 			html += "</td>"; */
@@ -245,10 +245,10 @@
 							<th style="width : 6%"><input type='checkbox' onchange="checkImplAll(this, 'table_check');">&nbsp;&nbsp;ALL</th>
 							<th>TABLE NAME</th>
 							<th style="width : 13%">DTO 생성</th>
-							<th style="width : 13%">MAPPER 생성</th>
 							<th style="width : 13%">SERVICE 생성</th>
 							<th style="width : 13%">SERVICE IMPL 생성</th>
 							<th style="width : 13%">DAO 생성</th>
+							<th style="width : 13%">MAPPER 생성</th>
 							<!-- <th style="width : 10%"><input type='checkbox' onchange="checkImplAll(this, 'impl_check');" checked='checked'>&nbsp;&nbsp;IMPL포함</th> -->
 						</tr>
 					</thead>
@@ -262,7 +262,7 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-12">
-				<h5 class="text-right">Copyright 2020 Lee Kang Min</h5>
+				<h5 class="text-right">Copyright 2022 KBS</h5>
 			</div>
 		</div>
 	</div>

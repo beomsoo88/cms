@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import %(PackageName)%.dto.%(TableName)%DTO;
+import %(PackageName)%.service.%(TableName)%DTO;
 
 @Mapper
 public interface %(TableName)%Mapper {

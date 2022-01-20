@@ -7,8 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import %(PackageName)%.dao.%(TableName)%Mapper;
-import %(PackageName)%.dto.%(TableName)%DTO;
+import %(PackageName)%.service.%(TableName)%DTO;
 import %(PackageName)%.service.%(TableName)%Service;
 
 @Service

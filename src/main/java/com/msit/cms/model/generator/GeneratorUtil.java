@@ -1,5 +1,6 @@
 package com.msit.cms.model.generator;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
@@ -53,23 +54,39 @@ public class GeneratorUtil {
 		return sb.toString();
 	}
 	
+	/**
+	 * 테이블 명에 따른 패키지 생성명 조회
+	 * ex) cms_admin_tb 라면 admin 만 가져오도록 cms_admin_log_tb 라도 admin만 return
+	 * @param s
+	 * @return
+	 */
+	public static String getPackageName(String s) {
+		s = s.toLowerCase();
+		return s.split("_")[1];
+	}
+	
 	public static void generateDao(Map<String, Object> input, String textIfce) throws Exception {
-		String PackageName = getPackageStr();
 		
 		String TableName = GeneratorUtil.convertPascalCase(input.get("tableName").toString().toUpperCase());
 		String tableName = GeneratorUtil.convertCamelCase(input.get("tableName").toString().toUpperCase());
 		
-		String DAOPackeage = "dao";
-		
+		String realPackageName = GeneratorUtil.getPackageName(input.get("tableName").toString().toUpperCase());
+		String DAOPackeage = "service.impl";
+		String PackageName = getPackageStr().replaceAll("model", realPackageName);
 		textIfce = textIfce.replaceAll("%\\(PackageName\\)%", PackageName);
 		textIfce = textIfce.replaceAll("%\\(TableName\\)%", TableName);
 		textIfce = textIfce.replaceAll("%\\(tableName\\)%", tableName);
 		textIfce = textIfce.replaceAll("%\\(PackageAdd\\)%", DAOPackeage);
 
-		String addPath = getAddPathStr();
-		
-		String filePath = input.get("folderPath").toString() + JAVA_PATH_SUFFIX + "\\" + addPath + DAOPackeage + "\\" + TableName + "Mapper.java";
-		
+		// fileDir 조회 및 생성
+		String addPath = getAddPathStr().replace("model", realPackageName);
+		String filePath = input.get("folderPath").toString() + JAVA_PATH_SUFFIX + "\\" + addPath + DAOPackeage.replace(".","\\");
+		File fileDir =  new File(filePath);
+		if(!fileDir.exists()) {
+			fileDir.mkdirs();
+		}
+		// file 생성
+		filePath = filePath + "\\" + TableName + "Mapper.java";
 		OutputStream output = new FileOutputStream(filePath);
 		byte[] by=textIfce.getBytes();
 		output.write(by);
@@ -98,21 +115,27 @@ public class GeneratorUtil {
 	}
 	
 	public static void generateService(Map<String, Object> input, String textIfce, String textImpl) throws Exception{
-		String PackageName = getPackageStr();
 		
 		String TableName = GeneratorUtil.convertPascalCase(input.get("tableName").toString().toUpperCase());
 		String tableName = GeneratorUtil.convertCamelCase(input.get("tableName").toString().toUpperCase());
-		
-		String ServicePackeage = "service";
 
+		String realPackageName = GeneratorUtil.getPackageName(input.get("tableName").toString().toUpperCase());
+		String ServicePackeage = "service";
+		String PackageName = getPackageStr().replaceAll("model", realPackageName);
 		textIfce = textIfce.replaceAll("%\\(PackageName\\)%", PackageName);
 		textIfce = textIfce.replaceAll("%\\(TableName\\)%", TableName);
 		textIfce = textIfce.replaceAll("%\\(tableName\\)%", tableName);
 		textIfce = textIfce.replaceAll("%\\(PackageAdd\\)%", ServicePackeage);
-		
-		String addPath = getAddPathStr();
-		
-		String filePathImpl = input.get("folderPath").toString() + JAVA_PATH_SUFFIX + "\\" + addPath + ServicePackeage + "\\" + TableName + "Service.java";
+
+		// fileDir 조회 및 생성
+		String addPath = getAddPathStr().replace("model", realPackageName);
+		String filePathImpl = input.get("folderPath").toString() + JAVA_PATH_SUFFIX + "\\" + addPath + ServicePackeage;
+		File fileDir =  new File(filePathImpl);
+		if(!fileDir.exists()) {
+			fileDir.mkdirs();
+		}
+		// file 생성
+		filePathImpl = filePathImpl + "\\" + TableName + "Service.java";
 		OutputStream output2 = new FileOutputStream(filePathImpl);
 		byte[] by2=textIfce.getBytes();
 		output2.write(by2);
@@ -120,21 +143,27 @@ public class GeneratorUtil {
 	}
 	
 	public static void generateServiceImpl(Map<String, Object> input, String textIfce, String textImpl) throws Exception{
-		String PackageName = getPackageStr();
 		
 		String TableName = GeneratorUtil.convertPascalCase(input.get("tableName").toString().toUpperCase());
 		String tableName = GeneratorUtil.convertCamelCase(input.get("tableName").toString().toUpperCase());
-		
-		String ServicePackeage = "serviceImpl";
 
+		String realPackageName = GeneratorUtil.getPackageName(input.get("tableName").toString().toUpperCase());
+		String ServicePackeage = "service.impl";
+		String PackageName = getPackageStr().replaceAll("model", realPackageName);
 		textImpl = textImpl.replaceAll("%\\(PackageName\\)%", PackageName);
 		textImpl = textImpl.replaceAll("%\\(TableName\\)%", TableName);
 		textImpl = textImpl.replaceAll("%\\(tableName\\)%", tableName);
 		textImpl = textImpl.replaceAll("%\\(PackageAdd\\)%", ServicePackeage);
-		
-		String addPath = getAddPathStr();
-		
-		String filePathImpl = input.get("folderPath").toString() + JAVA_PATH_SUFFIX + "\\" + addPath + ServicePackeage + "\\" + TableName + "ServiceImpl.java";
+
+		// fileDir 조회 및 생성
+		String addPath = getAddPathStr().replace("model", realPackageName);
+		String filePathImpl = input.get("folderPath").toString() + JAVA_PATH_SUFFIX + "\\" + addPath + ServicePackeage.replace(".","\\");
+		File fileDir =  new File(filePathImpl);
+		if(!fileDir.exists()) {
+			fileDir.mkdirs();
+		}
+		// file 생성
+		filePathImpl = filePathImpl + "\\" + TableName + "ServiceImpl.java";
 		OutputStream output2 = new FileOutputStream(filePathImpl);
 		byte[] by2=textImpl.getBytes();
 		output2.write(by2);
@@ -142,9 +171,10 @@ public class GeneratorUtil {
 	}
 	
 	public static void generateMapper(Map<String, Object> input, String text, List<Map<String, Object>> queryResult ) throws Exception {
-		
-		String PackageName = getPackageStr() + ".dto";
-		String DaoPackageName = getPackageStr() + ".dao";
+
+		String realPackageName = GeneratorUtil.getPackageName(input.get("tableName").toString().toUpperCase());
+		String PackageName = getPackageStr().replace("model", realPackageName) + ".service";
+		String DaoPackageName = getPackageStr().replace("model", realPackageName) + ".service.impl";
 
 		String KEY_NAME = queryResult.get(0).get("field").toString().toUpperCase();
 		String TABLE_NAME = input.get("tableName").toString().toUpperCase();
@@ -219,7 +249,6 @@ public class GeneratorUtil {
 	}
 	
 	public static void generateDto(Map<String, Object> input, String text, List<Map<String, Object>> queryResult ) throws Exception {
-		String PackageName = getPackageStr();
 		
 		String TableName = GeneratorUtil.convertPascalCase(input.get("tableName").toString().toUpperCase());
 		String columnVariablesList = "";
@@ -244,22 +273,26 @@ public class GeneratorUtil {
 				}
 			}
 		}
-		
-		String DTOPackeage = "dto";
 
-		String utilPackage = PackageName.replaceAll("model", "util");
-		String commonPackage = PackageName.replaceAll("model", "common");
-		text = text.replaceAll("%\\(UtilPackageName\\)%", utilPackage);
+		String realPackageName = GeneratorUtil.getPackageName(input.get("tableName").toString().toUpperCase());
+		String DTOPackeage = "service";
+		String PackageName = getPackageStr().replaceAll("model", realPackageName);
+		String commonPackage = PackageName.replaceAll(realPackageName, "common");
 		text = text.replaceAll("%\\(CommonPackageName\\)%", commonPackage);
 		text = text.replaceAll("%\\(PackageName\\)%", PackageName);
 		text = text.replaceAll("%\\(TableName\\)%", TableName);
 		text = text.replaceAll("%\\(columnVariablesList\\)%", columnVariablesList);
 		text = text.replaceAll("%\\(PackageAdd\\)%", DTOPackeage);
 		
-		
-		String addPath = getAddPathStr();
-		
-		String filePath = input.get("folderPath").toString() + JAVA_PATH_SUFFIX + "\\" + addPath + DTOPackeage + "\\" + TableName + "DTO.java";
+		// fileDir 조회 및 생성
+		String addPath = getAddPathStr().replace("model", realPackageName);
+		String filePath = input.get("folderPath").toString() + JAVA_PATH_SUFFIX + "\\" + addPath + DTOPackeage;
+		File fileDir =  new File(filePath);
+		if(!fileDir.exists()) {
+			fileDir.mkdirs();
+		}
+		// file 생성
+		filePath = filePath + "\\" + TableName + "DTO.java";
 		OutputStream output = new FileOutputStream(filePath);
 		byte[] by=text.getBytes();
 		output.write(by);
