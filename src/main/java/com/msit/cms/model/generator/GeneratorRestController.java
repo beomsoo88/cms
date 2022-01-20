@@ -199,6 +199,8 @@ public class GeneratorRestController {
 			GeneratorUtil.generateMapper(input, mapperTemplate, queryResult);
 			//DTO
 			GeneratorUtil.generateDto(input, DTOTemplate, queryResult);
+			//ServiceImpl
+			GeneratorUtil.generateServiceImpl(input, ServiceIfcTemplate, ServiceImplTemplate);
 			//Service
 			GeneratorUtil.generateService(input, ServiceIfcTemplate, ServiceImplTemplate);
 			//Dao
